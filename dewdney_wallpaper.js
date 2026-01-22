@@ -9,6 +9,7 @@ class DewdneyWallpaper {
       const value = parseFloat(params.get(id));
       if (isNaN(value)) {
         console.log(`Invalid value for ${id}: ${params.get(id)}`);
+        return;
       }
       input.value = value;
     }
