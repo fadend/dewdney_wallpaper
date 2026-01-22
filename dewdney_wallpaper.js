@@ -1,5 +1,20 @@
 class DewdneyWallpaper {
-  constructor(container) {
+  static setValueForId(input, params) {
+    const id = input.id;
+    if (input.type === "checkbox") {
+      if (params.size > 0) {
+        input.checked = !!params.has("id");
+      }
+    } else if (params.has(id)) {
+      const value = parseFloat(params.get(id));
+      if (isNaN(value)) {
+        console.log(`Invalid value for ${id}: ${params.get(id)}`);
+      }
+      input.value = value;
+    }
+  }
+  constructor(container, params) {
+    console.log(params);
     this.aInput = container.querySelector("#a");
     this.bInput = container.querySelector("#b");
     this.cInput = container.querySelector("#c");
@@ -7,9 +22,10 @@ class DewdneyWallpaper {
     this.canvas = container.querySelector("#canvas");
     this.context = this.canvas.getContext("2d");
     const inputs = [this.aInput, this.bInput, this.cInput, this.useColorInput];
-    inputs.forEach((input) =>
-      input.addEventListener("change", () => this.draw()),
-    );
+    inputs.forEach((input) => {
+      DewdneyWallpaper.setValueForId(input, params);
+      input.addEventListener("change", () => this.draw());
+    });
     inputs.forEach((input) =>
       input.addEventListener("keyup", (e) => {
         if (e.key === "Enter" || e.keyCode === 13) {
@@ -51,6 +67,26 @@ class DewdneyWallpaper {
       }
     }
   }
+
+  queryString() {
+    const params = new URLSearchParams();
+    params.set("a", this.aInput.value);
+    params.set("b", this.bInput.value);
+    params.set("c", this.cInput.value);
+    if (this.useColorInput.checked) {
+      params.set("use-color", "on");
+    }
+    return params.toString();
+  }
 }
 
-new DewdneyWallpaper(document.body);
+const wallpaper = new DewdneyWallpaper(
+  document.body,
+  new URLSearchParams(location.hash?.replace(/^#/, "") || ""),
+);
+function updateWallpaperHash() {
+  location.hash = "#" + wallpaper.queryString();
+}
+[...document.body.querySelectorAll("input")].forEach((input) =>
+  input.addEventListener("change", updateWallpaperHash),
+);
