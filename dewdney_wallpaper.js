@@ -3,7 +3,7 @@ class DewdneyWallpaper {
     const id = input.id;
     if (input.type === "checkbox") {
       if (params.size > 0) {
-        input.checked = !!params.has("id");
+        input.checked = !!params.has(id);
       }
     } else if (params.has(id)) {
       const value = parseFloat(params.get(id));
