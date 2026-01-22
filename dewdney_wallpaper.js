@@ -15,7 +15,6 @@ class DewdneyWallpaper {
     }
   }
   constructor(container, params) {
-    console.log(params);
     this.aInput = container.querySelector("#a");
     this.bInput = container.querySelector("#b");
     this.cInput = container.querySelector("#c");
